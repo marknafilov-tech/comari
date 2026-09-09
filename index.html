@@ -1,0 +1,4590 @@
+```ктопрочиталтотлох
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🦟 MEGA MOSQUITO CLICKER</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+    --bg:#0b0b12;
+    --panel:#151522;
+    --panel2:#1d1d30;
+    --line:#38384f;
+    --accent:#8d66ff;
+    --accent2:#b99cff;
+    --green:#83ff9b;
+    --gold:#ffd75e;
+    --red:#ff6679;
+    --text:#fff;
+    --muted:#8888a5;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(circle at 50% -10%,#38215d,transparent 40%),
+        linear-gradient(135deg,#0b0b12,#171128 55%,#090910);
+    overflow-x:hidden;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+button{
+    color:#fff;
+}
+
+.app{
+    width:min(1200px,94%);
+    margin:auto;
+    padding:18px 0 45px;
+}
+
+/* HEADER */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.logo{
+    font-size:clamp(28px,5vw,44px);
+    font-weight:900;
+    letter-spacing:-1px;
+    text-shadow:0 0 22px #8d66ff66;
+}
+
+.header-right{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.balance{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:11px 15px;
+    border-radius:14px;
+    font-size:19px;
+}
+
+.balance b{
+    color:var(--accent2);
+}
+
+/* PROFILE */
+
+.profile{
+    margin-top:15px;
+    background:linear-gradient(135deg,#19192b,#211b39);
+    border:1px solid var(--line);
+    padding:15px;
+    border-radius:18px;
+}
+
+.profile-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.profile-name{
+    font-size:23px;
+    font-weight:800;
+}
+
+.profile-info{
+    color:var(--muted);
+}
+
+.xp-bar{
+    margin-top:11px;
+    width:100%;
+    height:13px;
+    background:#0b0b13;
+    border-radius:99px;
+    overflow:hidden;
+    border:1px solid #2c2c40;
+}
+
+.xp-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#744cff,#b79aff);
+    transition:.25s;
+}
+
+/* NAV */
+
+.nav{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:16px 0 5px;
+}
+
+.nav button{
+    flex:0 0 auto;
+    padding:11px 15px;
+    border:0;
+    background:#232337;
+    border-radius:11px;
+    cursor:pointer;
+}
+
+.nav button.active{
+    background:#704ad3;
+}
+
+/* PANELS */
+
+.panel{
+    display:none;
+}
+
+.panel.active{
+    display:block;
+}
+
+/* GENERAL CARDS */
+
+.card{
+    background:rgba(21,21,34,.95);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:18px;
+}
+
+.grid{
+    display:grid;
+    gap:14px;
+}
+
+.stats-grid{
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+}
+
+.stat{
+    background:var(--panel2);
+    border:1px solid #2f2f44;
+    border-radius:15px;
+    padding:13px;
+}
+
+.stat .label{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.stat b{
+    display:block;
+    margin-top:3px;
+    font-size:23px;
+}
+
+.green{
+    color:var(--green);
+}
+
+.purple{
+    color:var(--accent2);
+}
+
+.gold{
+    color:var(--gold);
+}
+
+.red{
+    color:var(--red);
+}
+
+/* CLICKER */
+
+.clicker{
+    margin-top:14px;
+    min-height:510px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+}
+
+.clicker-note{
+    margin-top:10px;
+    color:var(--muted);
+    text-align:center;
+}
+
+.mosquito-wrap{
+    position:relative;
+}
+
+#mosquito{
+    width:min(350px,80vw);
+    height:320px;
+    object-fit:contain;
+    cursor:pointer;
+    user-select:none;
+    filter:drop-shadow(0 15px 22px #0008);
+    transition:.08s;
+}
+
+#mosquito:active{
+    transform:scale(.90) rotate(-1deg);
+}
+
+.gold-mosquito{
+    filter:
+        drop-shadow(0 0 20px #ffd75e)
+        drop-shadow(0 0 45px #ffae00);
+}
+
+.combo{
+    margin-top:10px;
+    font-size:22px;
+    color:var(--gold);
+    min-height:28px;
+}
+
+/* UPGRADE / SHOP */
+
+.shop-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+    margin-top:14px;
+}
+
+.shop-item{
+    background:var(--panel2);
+    border:1px solid #36364c;
+    border-radius:15px;
+    padding:15px;
+}
+
+.shop-item h3{
+    margin:0 0 6px;
+}
+
+.shop-item p{
+    color:var(--muted);
+    min-height:40px;
+}
+
+.primary{
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:11px;
+    background:#6c49d5;
+    cursor:pointer;
+    margin-top:8px;
+}
+
+.primary:hover:not(:disabled){
+    filter:brightness(1.12);
+}
+
+.secondary{
+    width:100%;
+    padding:11px;
+    border:0;
+    border-radius:11px;
+    background:#2a2a40;
+    cursor:pointer;
+    margin-top:8px;
+}
+
+.danger{
+    background:#5a2631;
+}
+
+.primary:disabled,
+.secondary:disabled{
+    opacity:.38;
+    cursor:not-allowed;
+}
+
+.price{
+    float:right;
+    color:var(--green);
+}
+
+/* EVENTS */
+
+.event{
+    margin-top:14px;
+    padding:13px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#29223d,#231e32);
+    border:1px solid #51436e;
+}
+
+.event-title{
+    font-weight:800;
+    font-size:18px;
+}
+
+/* CASES */
+
+.case-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+    margin-top:14px;
+}
+
+.case{
+    background:var(--panel2);
+    border:1px solid #3a3a52;
+    padding:14px;
+    border-radius:17px;
+}
+
+.case-preview{
+    height:155px;
+    border-radius:13px;
+    background:#0f0f18;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    margin-bottom:11px;
+}
+
+.case-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.case-title{
+    font-size:19px;
+    font-weight:800;
+}
+
+.case-meta{
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.case-btn{
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+    background:#704ad3;
+    border:0;
+    border-radius:11px;
+    cursor:pointer;
+}
+
+.case-btn:disabled{
+    opacity:.38;
+    cursor:not-allowed;
+}
+
+/* COLLECTION */
+
+.collection-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:12px;
+    margin-top:14px;
+}
+
+.collect-card{
+    background:var(--panel2);
+    border:1px solid #36364b;
+    border-radius:14px;
+    padding:10px;
+    text-align:center;
+}
+
+.collect-image{
+    height:120px;
+    border-radius:10px;
+    overflow:hidden;
+    background:#10101a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.collect-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.locked{
+    filter:grayscale(1);
+    opacity:.35;
+}
+
+.collect-name{
+    margin-top:8px;
+    font-weight:700;
+}
+
+.collect-count{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:4px;
+}
+
+/* ACHIEVEMENTS */
+
+.achievement-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:11px;
+    margin-top:14px;
+}
+
+.achievement{
+    background:var(--panel2);
+    border:1px solid #34344a;
+    padding:13px;
+    border-radius:14px;
+    opacity:.38;
+}
+
+.achievement.done{
+    opacity:1;
+    border-color:#7659cf;
+    box-shadow:0 0 16px #7659cf18;
+}
+
+.achievement-title{
+    font-weight:800;
+}
+
+.muted{
+    color:var(--muted);
+}
+
+/* ADMIN */
+
+.admin-form{
+    display:grid;
+    gap:9px;
+}
+
+.input,
+.select{
+    width:100%;
+    padding:12px;
+    color:#fff;
+    background:#0e0e18;
+    border:1px solid #42425a;
+    border-radius:10px;
+    outline:none;
+}
+
+.admin-section{
+    margin-top:20px;
+}
+
+.admin-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.admin-prize{
+    display:grid;
+    grid-template-columns:65px 1fr auto;
+    gap:10px;
+    align-items:center;
+    padding:9px;
+    background:#222238;
+    border-radius:11px;
+    margin:7px 0;
+}
+
+.admin-prize img{
+    width:65px;
+    height:55px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+.small{
+    font-size:13px;
+    color:var(--muted);
+}
+
+.admin-message{
+    margin-top:9px;
+    color:var(--green);
+    min-height:20px;
+}
+
+/* MODAL */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+    background:#000c;
+    backdrop-filter:blur(5px);
+}
+
+.modal{
+    width:min(720px,96vw);
+    max-height:92vh;
+    overflow:auto;
+    background:#181824;
+    border:1px solid #4b4b64;
+    border-radius:22px;
+    padding:20px;
+}
+
+.reel{
+    height:210px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    overflow:hidden;
+    background:#0d0d15;
+    border-radius:15px;
+    padding:10px;
+    margin:15px 0;
+    scroll-behavior:auto;
+}
+
+.reel-item{
+    flex:0 0 150px;
+    height:180px;
+    border-radius:12px;
+    overflow:hidden;
+    border:2px solid #39394f;
+    background:#242438;
+}
+
+.reel-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.modal-result{
+    min-height:32px;
+    text-align:center;
+    font-size:20px;
+}
+
+/* CAPTCHA */
+
+.captcha-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+    margin-top:15px;
+}
+
+.captcha-tile{
+    height:115px;
+    background:#242439;
+    border:2px solid #3e3e58;
+    border-radius:12px;
+    overflow:hidden;
+    cursor:pointer;
+}
+
+.captcha-tile.selected{
+    border-color:var(--green);
+    box-shadow:inset 0 0 0 2px #83ff9b44;
+}
+
+.captcha-tile img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+}
+
+/* FLOAT TEXT */
+
+.float{
+    position:fixed;
+    pointer-events:none;
+    z-index:500;
+    font-size:29px;
+    font-weight:900;
+    color:var(--green);
+    animation:floatUp .85s ease-out forwards;
+}
+
+@keyframes floatUp{
+    to{
+        transform:translateY(-95px) scale(1.08);
+        opacity:0;
+    }
+}
+
+/* GOLD MOSQUITO EVENT */
+
+.gold-event{
+    position:fixed;
+    z-index:60;
+    cursor:pointer;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:radial-gradient(circle,#fff1a8,#ffcf30 35%,#aa6500 75%);
+    box-shadow:0 0 25px #ffd75e,0 0 80px #ff9d00;
+    animation:bob 1s infinite alternate;
+}
+
+.gold-event img{
+    width:75px;
+    height:75px;
+    object-fit:contain;
+}
+
+@keyframes bob{
+    from{transform:translateY(-4px) rotate(-3deg)}
+    to{transform:translateY(5px) rotate(3deg)}
+}
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:25px;
+    transform:translateX(-50%);
+    z-index:1000;
+    padding:12px 18px;
+    border-radius:12px;
+    background:#25253a;
+    border:1px solid #4a4a67;
+    box-shadow:0 10px 40px #0008;
+    opacity:0;
+    pointer-events:none;
+    transition:.2s;
+}
+
+.toast.show{
+    opacity:1;
+}
+
+@media(max-width:650px){
+    .admin-row{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="header">
+
+    <div class="logo">
+        🦟 MEGA MOSQUITO
+    </div>
+
+    <div class="header-right">
+
+        <div class="balance">
+            🦟 <b id="money">0</b>
+        </div>
+
+        <div class="balance">
+            💎 <b id="gems">0</b>
+        </div>
+
+    </div>
+
+</header>
+
+
+<div class="profile">
+
+    <div class="profile-top">
+
+        <div>
+            <div class="profile-name">
+                🧑 <span id="playerName">Игрок</span>
+            </div>
+
+            <div class="profile-info">
+                Уровень <b id="level">1</b>
+                · Престиж <b id="prestige">0</b>
+            </div>
+        </div>
+
+        <div class="profile-info">
+            XP:
+            <b id="xpText">0 / 100</b>
+        </div>
+
+    </div>
+
+    <div class="xp-bar">
+        <div
+            class="xp-fill"
+            id="xpFill"
+        ></div>
+    </div>
+
+</div>
+
+
+<nav class="nav">
+
+<button class="active" data-panel="home">
+🦟 Кликер
+</button>
+
+<button data-panel="cases">
+🎁 Кейсбатл
+</button>
+
+<button data-panel="collection">
+📚 Коллекция
+</button>
+
+<button data-panel="achievements">
+🏆 Достижения
+</button>
+
+<button data-panel="admin">
+🔐 Админка
+</button>
+
+</nav>
+
+
+<!-- =========================
+     HOME
+========================= -->
+
+<section
+    id="home"
+    class="panel active"
+>
+
+<div class="grid stats-grid">
+
+<div class="stat">
+    <span class="label">
+        Всего кликов
+    </span>
+    <b id="clicks">0</b>
+</div>
+
+<div class="stat">
+    <span class="label">
+        Сила клика
+    </span>
+    <b class="purple" id="power">1</b>
+</div>
+
+<div class="stat">
+    <span class="label">
+        Автоклик
+    </span>
+    <b class="green" id="auto">0</b>/сек
+</div>
+
+<div class="stat">
+    <span class="label">
+        Комбо
+    </span>
+    <b class="gold" id="combo">0</b>
+</div>
+
+<div class="stat">
+    <span class="label">
+        Макс. комбо
+    </span>
+    <b id="maxCombo">0</b>
+</div>
+
+<div class="stat">
+    <span class="label">
+        Дропов открыто
+    </span>
+    <b id="casesOpened">0</b>
+</div>
+
+</div>
+
+
+<div
+    class="card clicker"
+>
+
+<div class="mosquito-wrap">
+
+<img
+    id="mosquito"
+    src="comar.png"
+    alt="Комар"
+>
+
+</div>
+
+<div class="combo">
+    <span id="comboText"></span>
+</div>
+
+<div class="clicker-note">
+    КЛИКАЙ ПО КОМАРУ
+</div>
+
+</div>
+
+
+<div id="eventBox"></div>
+
+
+<div class="shop-grid">
+
+<div class="shop-item">
+
+<h3>
+⚡ Сильный укус
+</h3>
+
+<p>
++1 к силе каждого ручного клика.
+</p>
+
+<button
+    class="primary"
+    id="buyPower"
+>
+</button>
+
+</div>
+
+
+<div class="shop-item">
+
+<h3>
+🤖 Комариная ферма
+</h3>
+
+<p>
+Добавляет 1 автоклик в секунду.
+</p>
+
+<button
+    class="primary"
+    id="buyAuto"
+>
+</button>
+
+</div>
+
+
+<div class="shop-item">
+
+<h3>
+🍀 Удача
+</h3>
+
+<p>
+Повышает шанс на критический клик.
+</p>
+
+<button
+    class="primary"
+    id="buyLuck"
+>
+</button>
+
+</div>
+
+
+<div class="shop-item">
+
+<h3>
+💰 Экономика
+</h3>
+
+<p>
+Повышает награды от обычных кликов.
+</p>
+
+<button
+    class="primary"
+    id="buyEconomy"
+>
+</button>
+
+</div>
+
+</div>
+
+
+<div
+    class="card"
+    style="margin-top:14px"
+>
+
+<h2>
+🌟 Престиж
+</h2>
+
+<p class="muted">
+Сбрось обычный прогресс и получи постоянный бонус.
+</p>
+
+<div>
+Текущий бонус:
+<b
+    id="prestigeBonus"
+    class="gold"
+>
+x1
+</b>
+</div>
+
+<button
+    class="primary"
+    id="prestigeButton"
+>
+</button>
+
+</div>
+
+
+<div
+    class="card"
+    style="margin-top:14px"
+>
+
+<h2>
+🎁 Ежедневная награда
+</h2>
+
+<div
+    id="dailyText"
+    class="muted"
+>
+Проверка...
+</div>
+
+<button
+    class="primary"
+    id="dailyButton"
+>
+Забрать награду
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CASES
+========================= -->
+
+<section
+    id="cases"
+    class="panel"
+>
+
+<div class="card">
+
+<h2>
+🎁 Кейсбатл
+</h2>
+
+<p class="muted">
+Каждая фотография становится отдельным призом.
+Никаких <b>fgsfgjks.png</b> — игра выдаёт смешные названия.
+</p>
+
+<div
+    id="caseStatus"
+    class="small"
+></div>
+
+<div
+    id="caseGrid"
+    class="case-grid"
+></div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     COLLECTION
+========================= -->
+
+<section
+    id="collection"
+    class="panel"
+>
+
+<div class="card">
+
+<h2>
+📚 Коллекция
+</h2>
+
+<div
+    class="muted"
+>
+Собрано:
+<span id="collectionCount">
+0 / 0
+</span>
+</div>
+
+<div
+    id="collectionGrid"
+    class="collection-grid"
+></div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     ACHIEVEMENTS
+========================= -->
+
+<section
+    id="achievements"
+    class="panel"
+>
+
+<div class="card">
+
+<h2>
+🏆 Достижения
+</h2>
+
+<div
+    id="achievementGrid"
+    class="achievement-grid"
+></div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     ADMIN
+========================= -->
+
+<section
+    id="admin"
+    class="panel"
+>
+
+<div class="card">
+
+<h2>
+🔐 Админ-панель
+</h2>
+
+<div
+    id="adminLogin"
+>
+
+<p class="muted">
+Пароль администратора:
+</p>
+
+<input
+    id="adminPassword"
+    class="input"
+    type="password"
+    placeholder="Введите пароль"
+>
+
+<button
+    class="primary"
+    id="adminLoginButton"
+>
+Войти
+</button>
+
+<div
+    id="adminLoginMessage"
+    class="admin-message"
+></div>
+
+</div>
+
+
+<div
+    id="adminContent"
+    style="display:none"
+>
+
+
+<div class="admin-section">
+
+<h3>
+💰 Экономика
+</h3>
+
+<div class="admin-row">
+
+<div>
+
+<input
+    id="adminMoney"
+    class="input"
+    type="number"
+    placeholder="Количество комаров"
+>
+
+<button
+    class="primary"
+    id="giveMoney"
+>
++ Выдать комаров
+</button>
+
+<button
+    class="secondary"
+    id="takeMoney"
+>
+− Забрать комаров
+</button>
+
+</div>
+
+
+<div>
+
+<input
+    id="adminGems"
+    class="input"
+    type="number"
+    placeholder="Количество кристаллов"
+>
+
+<button
+    class="primary"
+    id="giveGems"
+>
++ Выдать кристаллы
+</button>
+
+<button
+    class="secondary"
+    id="takeGems"
+>
+− Забрать кристаллы
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+⚡ Статы
+</h3>
+
+<div class="admin-row">
+
+<div>
+
+<input
+    id="adminPower"
+    class="input"
+    type="number"
+    placeholder="Сила клика"
+>
+
+<button
+    class="primary"
+    id="setPower"
+>
+Установить силу
+</button>
+
+</div>
+
+
+<div>
+
+<input
+    id="adminAuto"
+    class="input"
+    type="number"
+    placeholder="Автоклик"
+>
+
+<button
+    class="primary"
+    id="setAuto"
+>
+Установить автоклик
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+🎁 Кейсы
+</h3>
+
+<select
+    id="adminCase"
+    class="select"
+>
+</select>
+
+<button
+    class="primary"
+    id="giveCase"
+>
+🎁 Выдать бесплатный кейс
+</button>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+🏆 Достижения
+</h3>
+
+<select
+    id="adminAchievement"
+    class="select"
+>
+</select>
+
+<button
+    class="primary"
+    id="giveAchievement"
+>
+Выдать достижение
+</button>
+
+<button
+    class="secondary"
+    id="allAchievements"
+>
+Открыть ВСЕ достижения
+</button>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+💥 Бонусы
+</h3>
+
+<button
+    class="primary"
+    id="adminGoldMosquito"
+>
+🟡 Создать золотого комара
+</button>
+
+<button
+    class="primary"
+    id="adminDouble"
+>
+x2 на 60 секунд
+</button>
+
+<button
+    class="primary"
+    id="adminMega"
+>
+x10 на 30 секунд
+</button>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+📸 Добавить свои призы
+</h3>
+
+<input
+    id="adminFiles"
+    type="file"
+    multiple
+    accept="image/*"
+    hidden
+>
+
+<button
+    class="primary"
+    id="chooseFiles"
+>
+📁 Загрузить фотографии
+</button>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+☁️ GitHub
+</h3>
+
+<p class="small">
+Введи публичный репозиторий и папку с картинками.
+Например: <b>username/repo</b> + <b>cases</b>.
+</p>
+
+<input
+    id="githubRepo"
+    class="input"
+    placeholder="username/repository"
+>
+
+<input
+    id="githubFolder"
+    class="input"
+    style="margin-top:8px"
+    placeholder="cases"
+>
+
+<button
+    class="primary"
+    id="githubLoad"
+>
+🔄 Загрузить призы с GitHub
+</button>
+
+<div
+    id="githubMessage"
+    class="small"
+></div>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+✨ Названия призов
+</h3>
+
+<button
+    class="primary"
+    id="renameAll"
+>
+🎲 Перегенерировать ВСЕ названия
+</button>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+🗂️ Все призы
+</h3>
+
+<div
+    id="adminPrizeList"
+></div>
+
+</div>
+
+
+<div class="admin-section">
+
+<h3>
+🧨 DEV MODE
+</h3>
+
+<button
+    class="primary"
+    id="devMillion"
+>
++1 000 000 🦟
+</button>
+
+<button
+    class="secondary"
+    id="devLevel"
+>
++10 уровней
+</button>
+
+<button
+    class="secondary"
+    id="devPrestige"
+>
++1 престиж
+</button>
+
+<button
+    class="secondary danger"
+    id="fullReset"
+>
+☠️ ПОЛНЫЙ СБРОС
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- =========================
+     CASE MODAL
+========================= -->
+
+<div
+    class="overlay"
+    id="caseOverlay"
+>
+
+<div class="modal">
+
+<h2
+    id="caseModalTitle"
+>
+🎁 Кейс
+</h2>
+
+<div
+    id="caseModalPrice"
+    class="small"
+></div>
+
+<div
+    id="reel"
+    class="reel"
+></div>
+
+<div
+    id="caseResult"
+    class="modal-result"
+></div>
+
+<button
+    class="primary"
+    id="spinButton"
+>
+🎰 КРУТИТЬ
+</button>
+
+<button
+    class="secondary"
+    id="closeCase"
+>
+Закрыть
+</button>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     CAPTCHA
+========================= -->
+
+<div
+    class="overlay"
+    id="captchaOverlay"
+>
+
+<div class="modal">
+
+<h2>
+🤖 Проверка
+</h2>
+
+<p class="muted">
+Выбери все клетки, где находится комар.
+</p>
+
+<div
+    class="captcha-grid"
+    id="captchaGrid"
+></div>
+
+<div
+    id="captchaMessage"
+    class="modal-result"
+></div>
+
+</div>
+
+</div>
+
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<script>
+"use strict";
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const ADMIN_PASSWORD = "6767";
+
+const SOUND_FILES = [
+    "sounds/gav.1.mp3",
+    "sounds/gav.2.mp3",
+    "sounds/gav.3.mp3"
+];
+
+const CASES = [
+    {
+        id:"basic",
+        name:"Пузатый кейс",
+        price:50,
+        rarity:"Обычный"
+    },
+    {
+        id:"funny",
+        name:"Смешной кейс",
+        price:250,
+        rarity:"Редкий"
+    },
+    {
+        id:"mega",
+        name:"ГИГА-КЕЙС",
+        price:1000,
+        rarity:"Эпический"
+    },
+    {
+        id:"legend",
+        name:"Легендарная коробка",
+        price:5000,
+        rarity:"Легендарный"
+    },
+    {
+        id:"secret",
+        name:"67 КЕЙС",
+        price:67000,
+        rarity:"Секретный"
+    }
+];
+
+const FUNNY_NAMES = [
+    "Вкусность",
+    "Смешной дроп",
+    "Жужжащий мем",
+    "Комариный люкс",
+    "Подозрительный дроп",
+    "Легендарная штука",
+    "Гига-вкусность",
+    "Очень важная фотка",
+    "Пузатый трофей",
+    "Мега-дроп",
+    "Не спрашивай",
+    "Золотая вкусность",
+    "Комариный мем",
+    "Шедевр",
+    "Дропчик",
+    "Супер-комар",
+    "Странная находка",
+    "Кусочек удачи",
+    "Ультра-вкусность",
+    "Лут с болота",
+    "Гига-трофей",
+    "Банка хаоса",
+    "Мокрый артефакт",
+    "ЧТО ЭТО",
+    "Очень редкая штука",
+    "Сокровище из холодильника"
+];
+
+const FUNNY_ADJECTIVES = [
+    "сочный",
+    "подозрительный",
+    "легендарный",
+    "хрустящий",
+    "жужжащий",
+    "эпичный",
+    "мокрый",
+    "золотой",
+    "космический",
+    "пузатый",
+    "странный",
+    "гигантский"
+];
+
+const FUNNY_NOUNS = [
+    "дроп",
+    "подарок",
+    "мем",
+    "трофей",
+    "артефакт",
+    "кусочек",
+    "сюрприз",
+    "шедевр"
+];
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+const DEFAULT_STATE = {
+    name:"Игрок",
+
+    money:0,
+    gems:0,
+
+    clicks:0,
+
+    power:1,
+    auto:0,
+
+    powerLevel:0,
+    autoLevel:0,
+
+    luckLevel:0,
+    economyLevel:0,
+
+    xp:0,
+    level:1,
+
+    prestige:0,
+
+    combo:0,
+    maxCombo:0,
+
+    totalCases:0,
+
+    openedRewards:{},
+
+    achievements:[],
+
+    collection:{},
+
+    prizes:[],
+
+    github:{
+        repo:"",
+        folder:"cases"
+    },
+
+    dailyClaim:0,
+
+    activeMultiplier:1,
+    multiplierUntil:0
+};
+
+let state = loadState();
+
+let captchaActive = false;
+
+let rapidClicks = [];
+
+let currentCase = null;
+
+let adminUnlocked = false;
+
+let comboTimer = null;
+
+let eventTimer = null;
+
+let audioIndex = 0;
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+function loadState(){
+
+    try{
+
+        const saved =
+            JSON.parse(
+                localStorage.getItem(
+                    "mega_mosquito_clicker"
+                )
+            );
+
+        return merge(
+            JSON.parse(JSON.stringify(DEFAULT_STATE)),
+            saved || {}
+        );
+
+    }catch{
+
+        return JSON.parse(
+            JSON.stringify(DEFAULT_STATE)
+        );
+
+    }
+
+}
+
+function merge(base,obj){
+
+    for(const key in obj){
+
+        if(
+            obj[key]
+            &&
+            typeof obj[key] === "object"
+            &&
+            !Array.isArray(obj[key])
+            &&
+            base[key]
+            &&
+            typeof base[key] === "object"
+        ){
+            base[key]=merge(base[key],obj[key]);
+        }else{
+            base[key]=obj[key];
+        }
+
+    }
+
+    return base;
+
+}
+
+function save(){
+
+    localStorage.setItem(
+        "mega_mosquito_clicker",
+        JSON.stringify(state)
+    );
+
+}
+
+
+/* =========================================================
+   UTILS
+========================================================= */
+
+function $(id){
+    return document.getElementById(id);
+}
+
+function format(n){
+    return Number(n).toLocaleString("ru-RU");
+}
+
+function random(arr){
+    return arr[
+        Math.floor(
+            Math.random()*arr.length
+        )
+    ];
+}
+
+function randomName(){
+
+    if(Math.random()<.65){
+        return random(FUNNY_NAMES);
+    }
+
+    return (
+        random(FUNNY_ADJECTIVES)
+        +
+        " "
+        +
+        random(FUNNY_NOUNS)
+    );
+
+}
+
+function escapeHtml(text){
+
+    return String(text)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+function toast(text){
+
+    const box=$("toast");
+
+    box.textContent=text;
+
+    box.classList.add("show");
+
+    clearTimeout(box._timer);
+
+    box._timer=setTimeout(
+        ()=>box.classList.remove("show"),
+        2200
+    );
+
+}
+
+function showFloat(text,x,y){
+
+    const el=document.createElement("div");
+
+    el.className="float";
+
+    el.textContent=text;
+
+    el.style.left=x+"px";
+    el.style.top=y+"px";
+
+    document.body.appendChild(el);
+
+    setTimeout(
+        ()=>el.remove(),
+        850
+    );
+
+}
+
+
+/* =========================================================
+   XP / LEVEL
+========================================================= */
+
+function xpNeeded(){
+
+    return Math.floor(
+        100*Math.pow(1.18,state.level-1)
+    );
+
+}
+
+function addXP(amount){
+
+    state.xp+=amount;
+
+    while(
+        state.xp >= xpNeeded()
+    ){
+
+        state.xp -= xpNeeded();
+
+        state.level++;
+
+        state.money +=
+            250 * state.level;
+
+        state.gems += 2;
+
+        toast(
+            "🎉 Новый уровень! Уровень "+
+            state.level
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   COSTS
+========================================================= */
+
+function costPower(){
+
+    return Math.floor(
+        25 *
+        Math.pow(
+            1.6,
+            state.powerLevel
+        )
+    );
+
+}
+
+function costAuto(){
+
+    return Math.floor(
+        100 *
+        Math.pow(
+            1.8,
+            state.autoLevel
+        )
+    );
+
+}
+
+function costLuck(){
+
+    return Math.floor(
+        180 *
+        Math.pow(
+            1.9,
+            state.luckLevel
+        )
+    );
+
+}
+
+function costEconomy(){
+
+    return Math.floor(
+        240 *
+        Math.pow(
+            1.95,
+            state.economyLevel
+        )
+    );
+
+}
+
+function prestigeRequirement(){
+
+    return Math.floor(
+        500000 *
+        Math.pow(
+            2.8,
+            state.prestige
+        )
+    );
+
+}
+
+
+/* =========================================================
+   MULTIPLIER
+========================================================= */
+
+function currentMultiplier(){
+
+    if(
+        state.multiplierUntil >
+        Date.now()
+    ){
+
+        return state.activeMultiplier;
+
+    }
+
+    state.activeMultiplier=1;
+
+    return 1;
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render(){
+
+    const multiplier =
+        currentMultiplier();
+
+
+    $("money").textContent=
+        format(state.money);
+
+    $("gems").textContent=
+        format(state.gems);
+
+    $("clicks").textContent=
+        format(state.clicks);
+
+    $("power").textContent=
+        format(
+            Math.floor(
+                state.power*
+                multiplier
+            )
+        );
+
+    $("auto").textContent=
+        format(state.auto);
+
+    $("combo").textContent=
+        state.combo;
+
+    $("maxCombo").textContent=
+        state.maxCombo;
+
+    $("casesOpened").textContent=
+        state.totalCases;
+
+    $("level").textContent=
+        state.level;
+
+    $("prestige").textContent=
+        state.prestige;
+
+    $("xpText").textContent=
+        format(state.xp)
+        +
+        " / "
+        +
+        format(xpNeeded());
+
+    $("xpFill").style.width=
+        Math.min(
+            100,
+            state.xp/xpNeeded()*100
+        )
+        +
+        "%";
+
+    $("playerName").textContent=
+        state.name;
+
+
+    $("prestigeBonus").textContent=
+        "x"+
+        (1+state.prestige);
+
+
+    $("buyPower").disabled=
+        state.money<costPower();
+
+    $("buyPower").innerHTML=
+        "Улучшить " +
+        "<span class='price'>🦟 "+
+        format(costPower())+
+        "</span>";
+
+
+    $("buyAuto").disabled=
+        state.money<costAuto();
+
+    $("buyAuto").innerHTML=
+        "Улучшить " +
+        "<span class='price'>🦟 "+
+        format(costAuto())+
+        "</span>";
+
+
+    $("buyLuck").disabled=
+        state.money<costLuck();
+
+    $("buyLuck").innerHTML=
+        "Улучшить " +
+        "<span class='price'>🦟 "+
+        format(costLuck())+
+        "</span>";
+
+
+    $("buyEconomy").disabled=
+        state.money<costEconomy();
+
+    $("buyEconomy").innerHTML=
+        "Улучшить " +
+        "<span class='price'>🦟 "+
+        format(costEconomy())+
+        "</span>";
+
+
+    const req=
+        prestigeRequirement();
+
+    $("prestigeButton").disabled=
+        state.clicks<req;
+
+    $("prestigeButton").textContent=
+        "Престиж за "+
+        format(req)+
+        " кликов";
+
+
+    updateDaily();
+
+    renderCases();
+
+    renderCollection();
+
+    renderAchievements();
+
+    if(adminUnlocked){
+        renderAdmin();
+    }
+
+}
+
+
+/* =========================================================
+   CLICKER
+========================================================= */
+
+$("mosquito").addEventListener(
+    "click",
+    mosquitoClick
+);
+
+
+function mosquitoClick(e){
+
+    if(captchaActive)
+        return;
+
+
+    const now=
+        performance.now();
+
+
+    rapidClicks.push(now);
+
+    rapidClicks=
+        rapidClicks.filter(
+            t =>
+            now-t<2500
+        );
+
+
+    if(
+        rapidClicks.length>=24
+    ){
+
+        showCaptcha();
+
+        return;
+
+    }
+
+
+    state.clicks++;
+
+
+    state.combo++;
+
+    if(
+        state.combo>
+        state.maxCombo
+    ){
+        state.maxCombo=
+            state.combo;
+    }
+
+
+    clearTimeout(comboTimer);
+
+    comboTimer=setTimeout(
+        ()=>{
+            state.combo=0;
+            render();
+        },
+        1700
+    );
+
+
+    let amount =
+        state.power;
+
+
+    /* economy */
+
+    amount *=
+        1+
+        state.economyLevel*.10;
+
+
+    /* combo */
+
+    amount *=
+        1+
+        Math.min(
+            state.combo*.01,
+            .75
+        );
+
+
+    /* prestige */
+
+    amount *=
+        1+state.prestige;
+
+
+    /* multiplier */
+
+    amount *=
+        currentMultiplier();
+
+
+    /* critical */
+
+    const critChance=
+        .04+
+        state.luckLevel*.025;
+
+
+    let critical=false;
+
+
+    if(
+        Math.random()<
+        critChance
+    ){
+
+        amount*=4;
+
+        critical=true;
+
+    }
+
+
+    amount=
+        Math.floor(amount);
+
+
+    state.money+=amount;
+
+
+    addXP(
+        Math.max(
+            1,
+            Math.floor(amount/3)
+        )
+    );
+
+
+    playSound();
+
+
+    showFloat(
+        critical
+            ? "КРИТ x4! +"+amount+" 🦟"
+            : "+"+amount+" 🦟",
+        e.clientX,
+        e.clientY
+    );
+
+
+    if(
+        state.combo>=10
+        &&
+        state.combo%10===0
+    ){
+
+        toast(
+            "🔥 Комбо x"+
+            state.combo
+        );
+
+    }
+
+
+    checkRandomEvent();
+
+    checkAchievements();
+
+    save();
+
+    render();
+
+}
+
+
+/* =========================================================
+   SOUND
+========================================================= */
+
+function playSound(){
+
+    const file=
+        SOUND_FILES[
+            audioIndex
+        ];
+
+    audioIndex=
+        (audioIndex+1)%
+        SOUND_FILES.length;
+
+
+    const audio=
+        new Audio(file);
+
+    audio.volume=.48;
+
+    audio.play().catch(
+        ()=>{}
+    );
+
+}
+
+
+/* =========================================================
+   UPGRADES
+========================================================= */
+
+$("buyPower").onclick=()=>{
+
+    const c=costPower();
+
+    if(state.money<c)
+        return;
+
+    state.money-=c;
+
+    state.power++;
+
+    state.powerLevel++;
+
+    save();
+
+    render();
+
+};
+
+
+$("buyAuto").onclick=()=>{
+
+    const c=costAuto();
+
+    if(state.money<c)
+        return;
+
+    state.money-=c;
+
+    state.auto++;
+
+    state.autoLevel++;
+
+    save();
+
+    render();
+
+};
+
+
+$("buyLuck").onclick=()=>{
+
+    const c=costLuck();
+
+    if(state.money<c)
+        return;
+
+    state.money-=c;
+
+    state.luckLevel++;
+
+    save();
+
+    render();
+
+};
+
+
+$("buyEconomy").onclick=()=>{
+
+    const c=costEconomy();
+
+    if(state.money<c)
+        return;
+
+    state.money-=c;
+
+    state.economyLevel++;
+
+    save();
+
+    render();
+
+};
+
+
+/* =========================================================
+   AUTO CLICK
+========================================================= */
+
+setInterval(()=>{
+
+    if(
+        captchaActive ||
+        state.auto<=0
+    ){
+        return;
+    }
+
+
+    let amount=
+        state.auto*
+        (1+state.economyLevel*.10);
+
+
+    amount*=
+        1+state.prestige;
+
+
+    amount*=
+        currentMultiplier();
+
+
+    amount=
+        Math.floor(amount);
+
+
+    state.money+=amount;
+
+    state.clicks+=
+        state.auto;
+
+    addXP(
+        Math.max(
+            1,
+            Math.floor(amount/5)
+        )
+    );
+
+
+    checkAchievements();
+
+    save();
+
+    render();
+
+},1000);
+
+
+/* =========================================================
+   DAILY
+========================================================= */
+
+function updateDaily(){
+
+    const today =
+        new Date()
+        .toISOString()
+        .slice(0,10);
+
+
+    const claimed=
+        state.dailyClaim===
+        today;
+
+
+    $("dailyButton").disabled=
+        claimed;
+
+
+    $("dailyText").textContent=
+        claimed
+            ? "✅ Сегодня уже получено."
+            : "🎁 Сегодня можно получить 500 🦟 и 5 💎.";
+
+}
+
+
+$("dailyButton").onclick=()=>{
+
+    const today =
+        new Date()
+        .toISOString()
+        .slice(0,10);
+
+
+    if(
+        state.dailyClaim===
+        today
+    )
+        return;
+
+
+    state.dailyClaim=
+        today;
+
+    state.money+=500;
+
+    state.gems+=5;
+
+    addXP(50);
+
+    toast(
+        "🎁 Ежедневная награда получена!"
+    );
+
+    save();
+
+    render();
+
+};
+
+
+/* =========================================================
+   PRESTIGE
+========================================================= */
+
+$("prestigeButton").onclick=()=>{
+
+    const req=
+        prestigeRequirement();
+
+
+    if(
+        state.clicks<req
+    )
+        return;
+
+
+    if(
+        !confirm(
+            "Сделать престиж? Обычный прогресс будет сброшен, а престиж увеличится."
+        )
+    )
+        return;
+
+
+    state.prestige++;
+
+    state.clicks=0;
+
+    state.money=0;
+
+    state.power=1;
+
+    state.auto=0;
+
+    state.powerLevel=0;
+
+    state.autoLevel=0;
+
+    state.xp=0;
+
+    state.level=1;
+
+    toast(
+        "🌟 Престиж "+
+        state.prestige+
+        " активирован!"
+    );
+
+    save();
+
+    render();
+
+};
+
+
+/* =========================================================
+   RANDOM EVENTS
+========================================================= */
+
+let lastEvent=0;
+
+function checkRandomEvent(){
+
+    if(
+        Date.now()-lastEvent<12000
+    )
+        return;
+
+
+    lastEvent=Date.now();
+
+
+    if(
+        Math.random()<.025
+    ){
+
+        spawnGoldenMosquito();
+
+    }
+
+}
+
+
+function spawnGoldenMosquito(){
+
+    if(
+        document.querySelector(
+            ".gold-event"
+        )
+    )
+        return;
+
+
+    const event=
+        document.createElement(
+            "div"
+        );
+
+    event.className=
+        "gold-event";
+
+
+    const image=
+        document.createElement(
+            "img"
+        );
+
+    image.src=
+        "comar.png";
+
+
+    event.appendChild(
+        image
+    );
+
+
+    event.style.left=
+        (8+
+        Math.random()*78)
+        +"vw";
+
+
+    event.style.top=
+        (17+
+        Math.random()*65)
+        +"vh";
+
+
+    event.onclick=()=>{
+
+        const reward=
+            Math.floor(
+                (
+                    100+
+                    Math.random()*900
+                )
+                *
+                (1+state.prestige)
+            );
+
+
+        state.money+=reward;
+
+        state.gems+=5;
+
+        addXP(100);
+
+        toast(
+            "🟡 ЗОЛОТОЙ КОМАР! +"+
+            format(reward)+
+            " 🦟 +5 💎"
+        );
+
+
+        event.remove();
+
+        save();
+
+        render();
+
+    };
+
+
+    document.body.appendChild(
+        event
+    );
+
+
+    setTimeout(
+        ()=>{
+            if(event.isConnected)
+                event.remove();
+        },
+        10000
+    );
+
+}
+
+
+/* =========================================================
+   CASES
+========================================================= */
+
+function renderCases(){
+
+    const grid=
+        $("caseGrid");
+
+
+    const status=
+        $("caseStatus");
+
+
+    status.textContent=
+        "Призов доступно: "+
+        state.prizes.length;
+
+
+    grid.innerHTML="";
+
+
+    for(
+        const c
+        of CASES
+    ){
+
+        const card=
+            document.createElement(
+                "div"
+            );
+
+
+        card.className=
+            "case";
+
+
+        const preview=
+            state.prizes[0]
+            ?
+            `<img src="${state.prizes[0].url}">`
+            :
+            "🎁";
+
+
+        card.innerHTML=`
+
+        <div class="case-preview">
+            ${preview}
+        </div>
+
+        <div class="case-title">
+            ${c.name}
+        </div>
+
+        <div class="case-meta">
+            ${c.rarity}
+            · ${state.prizes.length} призов
+        </div>
+
+        `;
+
+
+        const button=
+            document.createElement(
+                "button"
+            );
+
+
+        button.className=
+            "case-btn";
+
+
+        button.textContent=
+            "Открыть за 🦟 "+
+            format(c.price);
+
+
+        button.disabled=
+            state.prizes.length===0
+            ||
+            state.money<c.price;
+
+
+        button.onclick=()=>{
+            openCase(c);
+        };
+
+
+        card.appendChild(
+            button
+        );
+
+
+        grid.appendChild(
+            card
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   OPEN CASE
+========================================================= */
+
+function randomPrize(){
+
+    if(
+        !state.prizes.length
+    )
+        return null;
+
+
+    return state.prizes[
+        Math.floor(
+            Math.random()*
+            state.prizes.length
+        )
+    ];
+
+}
+
+
+function openCase(c){
+
+    if(
+        state.money<c.price
+        ||
+        !state.prizes.length
+    )
+        return;
+
+
+    currentCase=c;
+
+
+    $("caseModalTitle")
+        .textContent=
+        "🎁 "+
+        c.name;
+
+
+    $("caseModalPrice")
+        .textContent=
+        "Стоимость: 🦟 "+
+        format(c.price);
+
+
+    $("caseResult")
+        .textContent="";
+
+
+    $("spinButton")
+        .disabled=false;
+
+
+    buildReel();
+
+
+    $("caseOverlay")
+        .style.display="flex";
+
+}
+
+
+function buildReel(){
+
+    const reel=
+        $("reel");
+
+
+    reel.innerHTML="";
+
+
+    for(
+        let i=0;
+        i<12;
+        i++
+    ){
+
+        const prize=
+            randomPrize();
+
+
+        const item=
+            document.createElement(
+                "div"
+            );
+
+
+        item.className=
+            "reel-item";
+
+
+        item.innerHTML=
+            `<img src="${prize.url}">`;
+
+
+        reel.appendChild(
+            item
+        );
+
+    }
+
+}
+
+
+$("closeCase").onclick=()=>{
+    $("caseOverlay")
+        .style.display="none";
+};
+
+
+$("spinButton").onclick=
+    spinCase;
+
+
+function spinCase(){
+
+    if(
+        !currentCase
+        ||
+        state.money<
+        currentCase.price
+        ||
+        !state.prizes.length
+    )
+        return;
+
+
+    state.money-=
+        currentCase.price;
+
+
+    $("spinButton")
+        .disabled=true;
+
+
+    const reel=$("reel");
+
+    reel.innerHTML="";
+
+
+    const prizes=[];
+
+
+    for(
+        let i=0;
+        i<30;
+        i++
+    ){
+
+        prizes.push(
+            randomPrize()
+        );
+
+    }
+
+
+    const winnerIndex=24;
+
+
+    for(
+        const prize
+        of prizes
+    ){
+
+        const item=
+            document.createElement(
+                "div"
+            );
+
+
+        item.className=
+            "reel-item";
+
+
+        item.innerHTML=
+            `<img src="${prize.url}">`;
+
+
+        reel.appendChild(
+            item
+        );
+
+    }
+
+
+    const target=
+        reel.children[
+            winnerIndex
+        ];
+
+
+    setTimeout(()=>{
+
+        const targetPosition=
+            target.offsetLeft
+            -
+            reel.clientWidth/2
+            +
+            target.clientWidth/2;
+
+
+        reel.scrollTo({
+            left:targetPosition,
+            behavior:"smooth"
+        });
+
+
+    },50);
+
+
+    setTimeout(()=>{
+
+        const prize=
+            prizes[
+                winnerIndex
+            ];
+
+
+        state.totalCases++;
+
+
+        if(
+            !state.collection[
+                prize.id
+            ]
+        ){
+
+            state.collection[
+                prize.id
+            ]=0;
+
+        }
+
+
+        state.collection[
+            prize.id
+        ]++;
+
+
+        state.openedRewards[
+            prize.name
+        ]=
+        (
+            state.openedRewards[
+                prize.name
+            ]||0
+        )+1;
+
+
+        addXP(120);
+
+
+        $("caseResult")
+            .innerHTML=
+            "🏆 Выпало:<br><b>"+
+            escapeHtml(
+                prize.name
+            )+
+            "</b>";
+
+
+        toast(
+            "🏆 "+
+            prize.name
+        );
+
+
+        save();
+
+        render();
+
+        checkAchievements();
+
+
+        $("spinButton")
+            .disabled=false;
+
+    },3100);
+
+}
+
+
+/* =========================================================
+   COLLECTION
+========================================================= */
+
+function renderCollection(){
+
+    const grid=
+        $("collectionGrid");
+
+
+    $("collectionCount")
+        .textContent=
+        Object.keys(
+            state.collection
+        ).length
+        +
+        " / "
+        +
+        state.prizes.length;
+
+
+    grid.innerHTML="";
+
+
+    for(
+        const prize
+        of state.prizes
+    ){
+
+        const count=
+            state.collection[
+                prize.id
+            ]||0;
+
+
+        const card=
+            document.createElement(
+                "div"
+            );
+
+
+        card.className=
+            "collect-card";
+
+
+        card.innerHTML=`
+
+        <div class="collect-image
+            ${count?"":"locked"}">
+
+            <img
+                src="${prize.url}"
+            >
+
+        </div>
+
+        <div class="collect-name">
+            ${escapeHtml(
+                prize.name
+            )}
+        </div>
+
+        <div class="collect-count">
+            ${count
+                ? "Получено: "+count
+                : "🔒 Не найдено"}
+        </div>
+
+        `;
+
+
+        grid.appendChild(
+            card
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+const ACHIEVEMENTS=[
+
+{
+    id:"first",
+    title:"Первый укус",
+    desc:"Сделать 1 клик",
+    check:s=>s.clicks>=1
+},
+
+{
+    id:"hundred",
+    title:"Комариный шум",
+    desc:"100 кликов",
+    check:s=>s.clicks>=100
+},
+
+{
+    id:"thousand",
+    title:"Летучий кошмар",
+    desc:"1 000 кликов",
+    check:s=>s.clicks>=1000
+},
+
+{
+    id:"tenk",
+    title:"Город уже злится",
+    desc:"10 000 кликов",
+    check:s=>s.clicks>=10000
+},
+
+{
+    id:"power10",
+    title:"Укус XL",
+    desc:"Сила клика 10+",
+    check:s=>s.power>=10
+},
+
+{
+    id:"auto10",
+    title:"Комариная фабрика",
+    desc:"10 автокликов",
+    check:s=>s.auto>=10
+},
+
+{
+    id:"combo50",
+    title:"Машина",
+    desc:"Комбо x50",
+    check:s=>s.maxCombo>=50
+},
+
+{
+    id:"case",
+    title:"Кейсоман",
+    desc:"Открыть 1 кейс",
+    check:s=>s.totalCases>=1
+},
+
+{
+    id:"case10",
+    title:"Крутильщик",
+    desc:"Открыть 10 кейсов",
+    check:s=>s.totalCases>=10
+},
+
+{
+    id:"level20",
+    title:"Опытный комар",
+    desc:"Достичь 20 уровня",
+    check:s=>s.level>=20
+},
+
+{
+    id:"prestige",
+    title:"Перерождение",
+    desc:"Сделать престиж",
+    check:s=>s.prestige>=1
+},
+
+{
+    id:"million",
+    title:"Император комаров",
+    desc:"1 000 000 кликов",
+    check:s=>s.clicks>=1000000
+}
+
+];
+
+
+function checkAchievements(){
+
+    let changed=false;
+
+
+    for(
+        const a
+        of ACHIEVEMENTS
+    ){
+
+        if(
+            !state.achievements
+                .includes(a.id)
+            &&
+            a.check(state)
+        ){
+
+            state.achievements
+                .push(a.id);
+
+            changed=true;
+
+            toast(
+                "🏆 Достижение: "+
+                a.title
+            );
+
+        }
+
+    }
+
+
+    if(changed)
+        save();
+
+}
+
+
+function renderAchievements(){
+
+    const box=
+        $("achievementGrid");
+
+
+    box.innerHTML="";
+
+
+    for(
+        const a
+        of ACHIEVEMENTS
+    ){
+
+        const done=
+            state.achievements
+                .includes(a.id);
+
+
+        const d=
+            document.createElement(
+                "div"
+            );
+
+
+        d.className=
+            "achievement "+
+            (
+                done
+                ? "done"
+                : ""
+            );
+
+
+        d.innerHTML=`
+
+        <div
+            class="achievement-title"
+        >
+            ${done?"✅":"🔒"}
+            ${a.title}
+        </div>
+
+        <div class="small">
+            ${a.desc}
+        </div>
+
+        `;
+
+
+        box.appendChild(d);
+
+    }
+
+}
+
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
+
+$("adminLoginButton").onclick=
+    loginAdmin;
+
+
+$("adminPassword")
+.addEventListener(
+    "keydown",
+    e=>{
+        if(e.key==="Enter")
+            loginAdmin();
+    }
+);
+
+
+function loginAdmin(){
+
+    const pass=
+        $("adminPassword")
+        .value;
+
+
+    if(
+        pass===
+        ADMIN_PASSWORD
+    ){
+
+        adminUnlocked=true;
+
+        $("adminLogin")
+            .style.display="none";
+
+        $("adminContent")
+            .style.display="block";
+
+        $("githubRepo")
+            .value=
+            state.github.repo;
+
+        $("githubFolder")
+            .value=
+            state.github.folder;
+
+        renderAdmin();
+
+        toast(
+            "🔓 Админ-панель открыта"
+        );
+
+    }else{
+
+        $("adminLoginMessage")
+            .textContent=
+            "❌ Неверный пароль";
+
+    }
+
+}
+
+
+/* =========================================================
+   ADMIN RENDER
+========================================================= */
+
+function renderAdmin(){
+
+    $("adminCase").innerHTML=
+        CASES.map(
+            c=>
+            `<option value="${c.id}">
+                ${c.name}
+            </option>`
+        ).join("");
+
+
+    $("adminAchievement").innerHTML=
+        ACHIEVEMENTS.map(
+            a=>
+            `<option value="${a.id}">
+                ${a.title}
+            </option>`
+        ).join("");
+
+
+    const list=
+        $("adminPrizeList");
+
+
+    list.innerHTML="";
+
+
+    if(!state.prizes.length){
+
+        list.innerHTML=
+            `<div class="small">
+                Призов пока нет.
+            </div>`;
+
+        return;
+
+    }
+
+
+    state.prizes.forEach(
+        (prize,index)=>{
+
+            const d=
+                document.createElement(
+                    "div"
+                );
+
+
+            d.className=
+                "admin-prize";
+
+
+            d.innerHTML=`
+
+            <img
+                src="${prize.url}"
+            >
+
+            <div>
+
+                <b>
+                    ${escapeHtml(
+                        prize.name
+                    )}
+                </b>
+
+                <br>
+
+                <span
+                    class="small"
+                >
+                    ${
+                        prize.source===
+                        "github"
+                        ?"☁️ GitHub"
+                        :"💻 Локальная загрузка"
+                    }
+                </span>
+
+            </div>
+
+            `;
+
+
+            const del=
+                document.createElement(
+                    "button"
+                );
+
+
+            del.className=
+                "secondary danger";
+
+
+            del.textContent=
+                "🗑️";
+
+
+            del.style.width=
+                "55px";
+
+
+            del.onclick=()=>{
+
+                state.prizes
+                    .splice(index,1);
+
+                save();
+
+                render();
+
+                renderAdmin();
+
+            };
+
+
+            d.appendChild(del);
+
+
+            list.appendChild(d);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ADMIN MONEY
+========================================================= */
+
+$("giveMoney").onclick=()=>{
+
+    const value=
+        Number(
+            $("adminMoney").value
+        );
+
+
+    if(!Number.isFinite(value))
+        return;
+
+
+    state.money+=
+        Math.max(0,value);
+
+
+    save();
+
+    render();
+
+    toast(
+        "💰 Выдано "+
+        format(value)+
+        " 🦟"
+    );
+
+};
+
+
+$("takeMoney").onclick=()=>{
+
+    const value=
+        Number(
+            $("adminMoney").value
+        );
+
+
+    if(!Number.isFinite(value))
+        return;
+
+
+    state.money=
+        Math.max(
+            0,
+            state.money-
+            Math.max(0,value)
+        );
+
+
+    save();
+
+    render();
+
+};
+
+
+$("giveGems").onclick=()=>{
+
+    const value=
+        Number(
+            $("adminGems").value
+        );
+
+
+    if(!Number.isFinite(value))
+        return;
+
+
+    state.gems+=
+        Math.max(0,value);
+
+
+    save();
+
+    render();
+
+};
+
+
+$("takeGems").onclick=()=>{
+
+    const value=
+        Number(
+            $("adminGems").value
+        );
+
+
+    if(!Number.isFinite(value))
+        return;
+
+
+    state.gems=
+        Math.max(
+            0,
+            state.gems-
+            Math.max(0,value)
+        );
+
+
+    save();
+
+    render();
+
+};
+
+
+/* =========================================================
+   ADMIN STATS
+========================================================= */
+
+$("setPower").onclick=()=>{
+
+    const value=
+        Number(
+            $("adminPower").value
+        );
+
+
+    if(!Number.isFinite(value))
+        return;
+
+
+    state.power=
+        Math.max(
+            1,
+            Math.floor(value)
+        );
+
+
+    save();
+
+    render();
+
+};
+
+
+$("setAuto").onclick=()=>{
+
+    const value=
+        Number(
+            $("adminAuto").value
+        );
+
+
+    if(!Number.isFinite(value))
+        return;
+
+
+    state.auto=
+        Math.max(
+            0,
+            Math.floor(value)
+        );
+
+
+    save();
+
+    render();
+
+};
+
+
+/* =========================================================
+   ADMIN CASE
+========================================================= */
+
+$("giveCase").onclick=()=>{
+
+    currentCase=
+        CASES.find(
+            c =>
+            c.id===
+            $("adminCase").value
+        );
+
+
+    toast(
+        "🎁 Бесплатный "+
+        currentCase.name+
+        " готов!"
+    );
+
+
+    openCaseFree(
+        currentCase
+    );
+
+};
+
+
+function openCaseFree(c){
+
+    if(!state.prizes.length){
+
+        toast(
+            "❌ Нет призов"
+        );
+
+        return;
+
+    }
+
+
+    currentCase=c;
+
+
+    $("caseModalTitle")
+        .textContent=
+        "🎁 "+
+        c.name+
+        " · ADMIN";
+
+
+    $("caseModalPrice")
+        .textContent=
+        "Бесплатное открытие";
+
+
+    $("caseResult")
+        .textContent="";
+
+
+    $("spinButton")
+        .disabled=false;
+
+
+    buildReel();
+
+
+    $("caseOverlay")
+        .style.display="flex";
+
+
+    const old=
+        $("spinButton")
+        ._adminFree;
+
+
+    $("spinButton")
+        ._adminFree=true;
+
+}
+
+
+const originalSpinCase=
+    spinCase;
+
+
+/* =========================================================
+   FREE ADMIN SPIN PATCH
+========================================================= */
+
+$("spinButton").onclick=()=>{
+
+    if(
+        $("spinButton")._adminFree
+    ){
+
+        $("spinButton")._adminFree=false;
+
+        const savedMoney=
+            state.money;
+
+        state.money+=
+            currentCase.price;
+
+        originalSpinCase();
+
+        state.money=
+            savedMoney;
+
+        save();
+
+        render();
+
+    }else{
+
+        originalSpinCase();
+
+    }
+
+};
+
+
+/* =========================================================
+   ADMIN ACHIEVEMENTS
+========================================================= */
+
+$("giveAchievement").onclick=()=>{
+
+    const id=
+        $("adminAchievement")
+        .value;
+
+
+    if(
+        !state.achievements
+            .includes(id)
+    ){
+
+        state.achievements
+            .push(id);
+
+        save();
+
+        render();
+
+        toast(
+            "🏆 Достижение выдано"
+        );
+
+    }
+
+};
+
+
+$("allAchievements").onclick=()=>{
+
+    state.achievements=
+        ACHIEVEMENTS.map(
+            a=>a.id
+        );
+
+    save();
+
+    render();
+
+    toast(
+        "🏆 Все достижения открыты"
+    );
+
+};
+
+
+/* =========================================================
+   ADMIN BONUSES
+========================================================= */
+
+$("adminGoldMosquito").onclick=
+    spawnGoldenMosquito;
+
+
+$("adminDouble").onclick=()=>{
+
+    state.activeMultiplier=2;
+
+    state.multiplierUntil=
+        Date.now()+
+        60000;
+
+    save();
+
+    render();
+
+    toast(
+        "💥 x2 активирован на 60 секунд"
+    );
+
+};
+
+
+$("adminMega").onclick=()=>{
+
+    state.activeMultiplier=10;
+
+    state.multiplierUntil=
+        Date.now()+
+        30000;
+
+    save();
+
+    render();
+
+    toast(
+        "💥 x10 активирован на 30 секунд"
+    );
+
+};
+
+
+/* =========================================================
+   ADMIN LOCAL FILES
+========================================================= */
+
+$("chooseFiles").onclick=()=>{
+
+    $("adminFiles").click();
+
+};
+
+
+$("adminFiles").onchange=
+    e=>{
+
+        const files=
+            [...e.target.files];
+
+
+        for(
+            const file
+            of files
+        ){
+
+            if(
+                !file.type
+                    .startsWith(
+                        "image/"
+                    )
+            )
+                continue;
+
+
+            const prize={
+
+                id:
+                    "local_"+
+                    Date.now()+
+                    "_"+
+                    Math.random(),
+
+                name:
+                    randomName(),
+
+                url:
+                    URL.createObjectURL(
+                        file
+                    ),
+
+                source:
+                    "local",
+
+                original:
+                    file.name
+
+            };
+
+
+            state.prizes.push(
+                prize
+            );
+
+        }
+
+
+        save();
+
+        render();
+
+        renderAdmin();
+
+        toast(
+            "📸 Добавлено "+
+            files.length+
+            " изображений"
+        );
+
+    };
+
+
+/* =========================================================
+   GITHUB
+========================================================= */
+
+$("githubLoad").onclick=
+    loadGithub;
+
+
+async function loadGithub(){
+
+    const repo=
+        $("githubRepo")
+        .value
+        .trim();
+
+
+    const folder=
+        (
+            $("githubFolder")
+            .value
+            .trim()
+            ||
+            "cases"
+        )
+        .replace(
+            /^\/+|\/+$/g,
+            ""
+        );
+
+
+    if(
+        !/^[^\/\s]+\/[^\/\s]+$/
+        .test(repo)
+    ){
+
+        $("githubMessage")
+            .textContent=
+            "❌ Формат: owner/repository";
+
+        return;
+
+    }
+
+
+    $("githubMessage")
+        .textContent=
+        "⏳ Загружаю...";
+
+
+    try{
+
+        const url=
+            "https://api.github.com/repos/"+
+            repo+
+            "/contents/"+
+            folder;
+
+
+        const response=
+            await fetch(
+                url,
+                {
+                    headers:{
+                        "Accept":
+                        "application/vnd.github+json"
+                    }
+                }
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "HTTP "+
+                response.status
+            );
+
+        }
+
+
+        const files=
+            await response.json();
+
+
+        const images=
+            files.filter(
+                file =>
+                    file.type===
+                    "file"
+                    &&
+                    /\.(png|jpe?g|webp|gif)$/i
+                    .test(file.name)
+            );
+
+
+        let added=0;
+
+
+        for(
+            const file
+            of images
+        ){
+
+            const exists=
+                state.prizes.some(
+                    prize =>
+                        prize.url===
+                        file.download_url
+                );
+
+
+            if(exists)
+                continue;
+
+
+            state.prizes.push({
+
+                id:
+                    "github_"+
+                    Date.now()+
+                    "_"+
+                    Math.random(),
+
+                name:
+                    randomName(),
+
+                url:
+                    file.download_url,
+
+                source:
+                    "github",
+
+                original:
+                    file.name
+
+            });
+
+
+            added++;
+
+        }
+
+
+        state.github.repo=
+            repo;
+
+        state.github.folder=
+            folder;
+
+
+        save();
+
+        render();
+
+        renderAdmin();
+
+
+        $("githubMessage")
+            .textContent=
+            "✅ Добавлено новых призов: "+
+            added;
+
+    }catch(error){
+
+        $("githubMessage")
+            .textContent=
+            "❌ GitHub: "+
+            error.message;
+
+    }
+
+}
+
+
+/* =========================================================
+   RENAME
+========================================================= */
+
+$("renameAll").onclick=()=>{
+
+    state.prizes.forEach(
+        prize=>{
+            prize.name=
+                randomName();
+        }
+    );
+
+
+    save();
+
+    render();
+
+    renderAdmin();
+
+    toast(
+        "✨ Названия обновлены"
+    );
+
+};
+
+
+/* =========================================================
+   DEV MODE
+========================================================= */
+
+$("devMillion").onclick=()=>{
+
+    state.money+=
+        1000000;
+
+    save();
+
+    render();
+
+    toast(
+        "🧨 +1 000 000 🦟"
+    );
+
+};
+
+
+$("devLevel").onclick=()=>{
+
+    state.level+=10;
+
+    save();
+
+    render();
+
+    toast(
+        "🆙 +10 уровней"
+    );
+
+};
+
+
+$("devPrestige").onclick=()=>{
+
+    state.prestige++;
+
+    save();
+
+    render();
+
+    toast(
+        "🌟 +1 престиж"
+    );
+
+};
+
+
+$("fullReset").onclick=()=>{
+
+    if(
+        !confirm(
+            "ТОЧНО полностью сбросить игру?"
+        )
+    )
+        return;
+
+
+    localStorage.removeItem(
+        "mega_mosquito_clicker"
+    );
+
+
+    location.reload();
+
+};
+
+
+/* =========================================================
+   CAPTCHA
+========================================================= */
+
+function showCaptcha(){
+
+    captchaActive=true;
+
+    rapidClicks=[];
+
+
+    const overlay=
+        $("captchaOverlay");
+
+
+    const grid=
+        $("captchaGrid");
+
+
+    const message=
+        $("captchaMessage");
+
+
+    grid.innerHTML="";
+
+    message.textContent="";
+
+
+    const answers=
+        new Set();
+
+
+    while(
+        answers.size<2
+    ){
+
+        answers.add(
+            Math.floor(
+                Math.random()*9
+            )
+        );
+
+    }
+
+
+    const selected=
+        new Set();
+
+
+    const otherBugs=[
+        "🪰",
+        "🦋",
+        "🐝",
+        "🐞",
+        "🦗",
+        "🕷️"
+    ];
+
+
+    for(
+        let i=0;
+        i<9;
+        i++
+    ){
+
+        const tile=
+            document.createElement(
+                "button"
+            );
+
+
+        tile.className=
+            "captcha-tile";
+
+
+        if(
+            answers.has(i)
+        ){
+
+            tile.innerHTML=
+                `<img src="comar.png">`;
+
+        }else{
+
+            tile.textContent=
+                random(
+                    otherBugs
+                );
+
+            tile.style.fontSize=
+                "45px";
+
+        }
+
+
+        tile.onclick=()=>{
+
+            if(
+                selected.has(i)
+            ){
+
+                selected.delete(i);
+
+                tile.classList
+                    .remove(
+                        "selected"
+                    );
+
+            }else{
+
+                selected.add(i);
+
+                tile.classList
+                    .add(
+                        "selected"
+                    );
+
+            }
+
+
+            if(
+                selected.size===
+                answers.size
+            ){
+
+                const correct=
+                    [...selected]
+                    .every(
+                        x =>
+                            answers.has(x)
+                    );
+
+
+                if(correct){
+
+                    message.textContent=
+                        "✅ Проверка пройдена!";
+
+
+                    setTimeout(
+                        ()=>{
+                            overlay
+                                .style
+                                .display=
+                                "none";
+
+                            captchaActive=
+                                false;
+
+                        },
+                        500
+                    );
+
+                }else{
+
+                    message.textContent=
+                        "❌ Ошибка";
+
+
+                    setTimeout(
+                        showCaptcha,
+                        650
+                    );
+
+                }
+
+            }
+
+        };
+
+
+        grid.appendChild(
+            tile
+        );
+
+    }
+
+
+    overlay.style.display=
+        "flex";
+
+}
+
+
+/* =========================================================
+   NAV
+========================================================= */
+
+document
+.querySelectorAll(".nav button")
+.forEach(
+    button=>{
+
+        button.onclick=()=>{
+
+            document
+            .querySelectorAll(
+                ".nav button"
+            )
+            .forEach(
+                b =>
+                    b.classList
+                     .remove(
+                        "active"
+                     )
+            );
+
+
+            document
+            .querySelectorAll(
+                ".panel"
+            )
+            .forEach(
+                p =>
+                    p.classList
+                     .remove(
+                        "active"
+                     )
+            );
+
+
+            button.classList
+                .add("active");
+
+
+            $(button.dataset.panel)
+                .classList
+                .add("active");
+
+        };
+
+    }
+);
+
+
+/* =========================================================
+   GLOBAL TIMER
+========================================================= */
+
+setInterval(()=>{
+
+    if(
+        state.multiplierUntil
+        &&
+        state.multiplierUntil<
+        Date.now()
+    ){
+
+        state.multiplierUntil=0;
+
+        state.activeMultiplier=1;
+
+        save();
+
+        render();
+
+    }
+
+},1000);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+checkAchievements();
+
+render();
+
+</script>
+
+</body>
+</html>
