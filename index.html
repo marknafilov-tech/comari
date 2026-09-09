@@ -48,7 +48,33 @@ button:disabled{opacity:.4;cursor:not-allowed}
 .reset{background:#42242c;text-align:center}
 small{opacity:.65}
 @media(max-width:800px){.main{grid-template-columns:1fr}.click-area{min-height:400px}}
-</style>
+
+/* CAPTCHA */
+.captcha-overlay{
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(0,0,0,.78); backdrop-filter:blur(5px);
+    align-items:center; justify-content:center; padding:20px;
+}
+.captcha{
+    width:min(430px,94vw); background:#171727; border:1px solid #55557a;
+    border-radius:20px; padding:22px; box-shadow:0 20px 80px #000;
+    text-align:center;
+}
+.captcha h2{margin:0 0 7px}
+.captcha p{opacity:.7;margin:5px 0 15px}
+.captcha-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
+}
+.captcha-tile{
+    height:100px; border:2px solid #30304a; border-radius:12px;
+    background:#222238; cursor:pointer; display:flex;
+    align-items:center; justify-content:center; overflow:hidden;
+    font-size:45px; transition:.12s;
+}
+.captcha-tile:hover{border-color:#9d7cff; transform:scale(1.03)}
+.captcha-tile img{width:70px;height:70px;object-fit:contain}
+.captcha-msg{min-height:22px;margin-top:12px;font-weight:bold}
+
 </head>
 <body>
 <div class="wrap">
@@ -157,7 +183,83 @@ function playSound(){
     };
     tryNext();
 }
+
+let captchaActive = false;
+let rapidClicks = [];
+let captchaAnswer = new Set();
+let captchaSelected = new Set();
+
+function showCaptcha(){
+    if(captchaActive) return;
+    captchaActive = true;
+    captchaSelected.clear();
+    captchaAnswer.clear();
+
+    const grid = document.getElementById("captchaGrid");
+    const msg = document.getElementById("captchaMsg");
+    grid.innerHTML = "";
+    msg.textContent = "";
+
+    // 9 клеток: 2–3 настоящих комара и остальные другие насекомые.
+    const insects = ["🪰","🪳","🦋","🐝","🕷️","🐞","🦗"];
+    const count = 2 + Math.floor(Math.random()*2);
+    const positions = [];
+    while(positions.length < count){
+        const p = Math.floor(Math.random()*9);
+        if(!positions.includes(p)) positions.push(p);
+    }
+
+    for(let i=0;i<9;i++){
+        const tile = document.createElement("button");
+        tile.className = "captcha-tile";
+        tile.type = "button";
+        if(positions.includes(i)){
+            tile.innerHTML = '<img src="comar.png" alt="Комар">';
+            captchaAnswer.add(i);
+        }else{
+            tile.textContent = insects[Math.floor(Math.random()*insects.length)];
+        }
+        tile.onclick = () => {
+            if(captchaSelected.has(i)){
+                captchaSelected.delete(i);
+                tile.style.borderColor = "";
+                tile.style.transform = "";
+            }else{
+                captchaSelected.add(i);
+                tile.style.borderColor = "#8dffab";
+                tile.style.transform = "scale(.96)";
+            }
+            if(captchaSelected.size === captchaAnswer.size &&
+               [...captchaSelected].every(x=>captchaAnswer.has(x))){
+                document.getElementById("captchaMsg").textContent = "✅ Проверка пройдена!";
+                setTimeout(()=>{
+                    document.getElementById("captchaOverlay").style.display="none";
+                    captchaActive=false;
+                    rapidClicks=[];
+                },500);
+            }else if(captchaSelected.size >= captchaAnswer.size){
+                document.getElementById("captchaMsg").textContent = "❌ Есть ошибка — попробуй ещё раз";
+                setTimeout(showCaptcha,700);
+            }
+        };
+        grid.appendChild(tile);
+    }
+    document.getElementById("captchaOverlay").style.display="flex";
+}
+
 function clickMosquito(e){
+    if(captchaActive) return;
+
+    const now = performance.now();
+    rapidClicks.push(now);
+    rapidClicks = rapidClicks.filter(t => now - t < 3000);
+
+    // Если больше 28 кликов за 3 секунды — просим пройти проверку.
+    if(rapidClicks.length > 28){
+        showCaptcha();
+        return;
+    }
+
     game.clicks++;
     game.mosquitos+=game.power;
     playSound();
@@ -193,5 +295,15 @@ setInterval(()=>{
 },1000);
 render();
 </script>
+
+<div class="captcha-overlay" id="captchaOverlay">
+  <div class="captcha">
+    <h2>🤖 Проверка</h2>
+    <p>Выбери все клетки, где находится <b>комар</b>.</p>
+    <div class="captcha-grid" id="captchaGrid"></div>
+    <div class="captcha-msg" id="captchaMsg"></div>
+  </div>
+</div>
+
 </body>
 </html>
