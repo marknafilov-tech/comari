@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🦟 Mosquito Clicker</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#10101a,#1d1430);color:#fff;font:16px Arial,sans-serif;min-height:100vh}
+button{font:inherit;color:inherit;border:0;cursor:pointer}
+.app{width:min(1100px,94vw);margin:auto;padding:22px 0 40px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.logo{font-size:38px;font-weight:900}
+.balance{background:#181829;border:1px solid #393953;border-radius:14px;padding:10px 16px;font-size:20px}
+.balance b{color:#a98cff}
+.tabs{display:flex;gap:8px;margin:20px 0}
+.tab{padding:12px 18px;border-radius:12px;background:#222239}
+.tab.active{background:#6f4dd9}
+.panel{display:none}.panel.active{display:block}
+.card{background:#171724;border:1px solid #35354d;border-radius:20px;padding:20px}
+.click-panel{min-height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#mosquito{width:min(330px,80vw);height:300px;object-fit:contain;cursor:pointer;user-select:none;transition:.08s}
+#mosquito:active{transform:scale(.91)}
+.big{font-size:24px;margin-top:14px}
+.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:15px}
+.stat{background:#202033;border-radius:12px;padding:9px 13px}
+.stat b{display:block;font-size:21px;color:#bba5ff}
+.shop{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:15px}
+.item{background:#202033;border-radius:14px;padding:14px}
+.buy{width:100%;padding:12px;border-radius:10px;background:#684ad0;margin-top:10px}
+.buy:disabled{opacity:.4;cursor:not-allowed}
+.price{float:right;color:#9affad}
+.ach{padding:10px;margin:7px 0;background:#202033;border-radius:10px;opacity:.45}
+.ach.done{opacity:1;border:1px solid #7056cc}
+.cases-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.filebtn{background:#292941;border-radius:10px;padding:10px 14px}
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:16px}
+.case{background:#202033;border:1px solid #3b3b56;border-radius:18px;padding:14px}
+.case h3{margin:4px 0 6px}
+.case-desc{opacity:.65;min-height:42px}
+.case-open{width:100%;padding:12px;border-radius:10px;background:#6a4bd2;margin-top:10px}
+.case-open:disabled{opacity:.35;cursor:not-allowed}
+.preview{height:150px;border-radius:12px;background:#11111c;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.preview img{width:100%;height:100%;object-fit:cover}
+.small{opacity:.6;font-size:13px}
+.overlay{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal{width:min(620px,96vw);background:#181827;border:1px solid #46465f;border-radius:22px;padding:20px;text-align:center}
+.reel{height:220px;display:flex;gap:12px;align-items:center;overflow:hidden;background:#11111b;border-radius:15px;padding:12px;margin:15px 0}
+.reel-item{min-width:145px;height:190px;border-radius:13px;background:#24243a;overflow:hidden;border:2px solid #383851;display:flex;align-items:center;justify-content:center}
+.reel-item img{width:100%;height:100%;object-fit:cover}
+.spin{padding:13px 20px;border-radius:12px;background:#7654df;font-weight:700}
+.spin:disabled{opacity:.5}
+.result{min-height:28px;margin:10px;font-size:19px}
+.float{position:fixed;pointer-events:none;font-size:28px;font-weight:bold;color:#98ffac;z-index:100;animation:up .8s forwards}
+@keyframes up{to{transform:translateY(-95px);opacity:0}}
+.captcha-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.captcha-tile{height:110px;background:#25253a;border:2px solid #3d3d58;border-radius:12px;overflow:hidden}
+.captcha-tile img{width:100%;height:100%;object-fit:contain}
+.captcha-tile.selected{border-color:#85ff9c;box-shadow:0 0 0 2px #85ff9c55 inset}
+@media(max-width:700px){.shop{grid-template-columns:1fr}.logo{font-size:30px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="logo">🦟 MOSQUITO CLICKER</div>
+    <div class="balance">🦟 <b id="money">0</b></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="click">🦟 Кликер</button>
+    <button class="tab" data-tab="cases">🎁 Кейсбатл</button>
+  </div>
+
+  <section id="click" class="panel active">
+    <div class="card click-panel">
+      <img id="mosquito" src="comar.png" alt="Комар">
+      <div class="big">Кликай по комару!</div>
+      <div class="stats">
+        <div class="stat">Клики<b id="clicks">0</b></div>
+        <div class="stat">За клик<b id="power">1</b></div>
+        <div class="stat">Авто<b id="auto">0</b>/сек</div>
+      </div>
+    </div>
+
+    <div class="shop">
+      <div class="card item">
+        <h3>⚡ Сильный укус</h3>
+        <div>+1 к силе клика</div>
+        <button class="buy" id="buyPower"></button>
+      </div>
+      <div class="card item">
+        <h3>🤖 Комариная ферма</h3>
+        <div>+1 автоклик в секунду</div>
+        <button class="buy" id="buyAuto"></button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:15px">
+      <h2>🏆 Достижения</h2>
+      <div id="achievements"></div>
+    </div>
+  </section>
+
+  <section id="cases" class="panel">
+    <div class="card">
+      <div class="cases-head">
+        <div>
+          <h2 style="margin:0">🎁 Кейсбатл</h2>
+          <div class="small">Фотографии из папки <b>cases</b> используются как призы.</div>
+        </div>
+        <label class="filebtn">📁 Подключить папку cases
+          <input id="folderInput" type="file" webkitdirectory directory multiple accept="image/*" hidden>
+        </label>
+      </div>
+      <div id="caseStatus" class="small" style="margin-top:12px"></div>
+      <div id="caseGrid" class="cases"></div>
+    </div>
+  </section>
+</div>
+
+<div class="overlay" id="caseOverlay">
+  <div class="modal">
+    <h2 id="caseTitle">🎁 Кейс</h2>
+    <div class="small" id="caseCost"></div>
+    <div class="reel" id="reel"></div>
+    <div class="result" id="result"></div>
+    <button class="spin" id="spinBtn">Крутить</button>
+    <button class="filebtn" id="closeCase" style="margin-top:8px">Закрыть</button>
+  </div>
+</div>
+
+<div class="overlay" id="captchaOverlay">
+  <div class="modal">
+    <h2>🤖 Проверка</h2>
+    <p>Выбери все клетки, где находится комар.</p>
+    <div class="captcha-wrap" id="captchaGrid"></div>
+    <div class="result" id="captchaMsg"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const state = JSON.parse(localStorage.getItem("mosquitoState") || "null") || {
+  clicks:0, money:0, power:1, auto:0, powerLv:0, autoLv:0, unlocked:[], cases:{}
+};
+
+const upgrades = {
+  power:{base:25, scale:1.6},
+  auto:{base:100, scale:1.8}
+};
+
+let caseImages = [];
+let currentCase = null;
+let captchaActive = false;
+let clickTimes = [];
+let audioCache = {};
+
+const defaultCases = [
+  {id:"basic", name:"Пузатый кейс", cost:50, multiplier:1},
+  {id:"mega", name:"Жирный кейс", cost:250, multiplier:2},
+  {id:"legend", name:"Легендарный кейс", cost:1000, multiplier:4}
+];
+
+const achievements = [
+  ["one","Первый укус","Сделать 1 клик",s=>s.clicks>=1],
+  ["hundred","Комариный шум","100 кликов",s=>s.clicks>=100],
+  ["thousand","Летучий кошмар","1 000 кликов",s=>s.clicks>=1000],
+  ["power10","Укус XL","Сила клика 10+",s=>s.power>=10],
+  ["auto10","Комариная фабрика","10 автокликов/сек",s=>s.auto>=10],
+  ["case1","Открылка","Открыть кейс",s=>Object.keys(s.cases).length>=1],
+  ["million","Император комаров","1 000 000 кликов",s=>s.clicks>=1000000]
+];
+
+function save(){localStorage.setItem("mosquitoState",JSON.stringify(state))}
+function cost(type){let lv=type==="power"?state.powerLv:state.autoLv;return Math.floor(upgrades[type].base*Math.pow(upgrades[type].scale,lv))}
+function fmt(n){return Number(n).toLocaleString("ru-RU")}
+
+function render(){
+  $("money").textContent=fmt(state.money);
+  $("clicks").textContent=fmt(state.clicks);
+  $("power").textContent=fmt(state.power);
+  $("auto").textContent=fmt(state.auto);
+
+  const pc=cost("power"), ac=cost("auto");
+  $("buyPower").disabled=state.money<pc;
+  $("buyAuto").disabled=state.money<ac;
+  $("buyPower").innerHTML=`Улучшить <span class="price">🦟 ${fmt(pc)}</span>`;
+  $("buyAuto").innerHTML=`Улучшить <span class="price">🦟 ${fmt(ac)}</span>`;
+
+  $("achievements").innerHTML=achievements.map(([id,n,d,test])=>{
+    const done=state.unlocked.includes(id);
+    return `<div class="ach ${done?"done":""}">${done?"✅":"🔒"} <b>${n}</b><br><span class="small">${d}</span></div>`;
+  }).join("");
+
+  renderCases();
+}
+
+function checkAchievements(){
+  let changed=false;
+  for(const [id,_,__,test] of achievements){
+    if(!state.unlocked.includes(id) && test(state)){
+      state.unlocked.push(id); changed=true;
+    }
+  }
+  if(changed)save();
+}
+
+function buy(type){
+  const c=cost(type);
+  if(state.money<c)return;
+  state.money-=c;
+  if(type==="power"){state.power++;state.powerLv++}
+  else {state.auto++;state.autoLv++}
+  save();render();checkAchievements();
+}
+
+function clickMosquito(e){
+  if(captchaActive)return;
+  const now=performance.now();
+  clickTimes.push(now);
+  clickTimes=clickTimes.filter(t=>now-t<2500);
+
+  if(clickTimes.length>=24){
+    showCaptcha();
+    return;
+  }
+
+  state.clicks++;
+  state.money+=state.power;
+  playGav();
+  floatText("+"+state.power+" 🦟",e.clientX,e.clientY);
+  save();render();checkAchievements();
+}
+
+function floatText(text,x,y){
+  const f=document.createElement("div");
+  f.className="float"; f.textContent=text;
+  f.style.left=(x-15)+"px"; f.style.top=(y-10)+"px";
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),850);
+}
+
+function playGav(){
+  const names=["gav.1","gav.2","gav.3"];
+  const name=names[Math.floor(Math.random()*names.length)];
+  const files=[`sounds/${name}.mp3`,`sounds/${name}.wav`,`sounds/${name}.ogg`];
+  let i=0;
+  function next(){
+    if(i>=files.length)return;
+    const src=files[i++];
+    if(!audioCache[src])audioCache[src]=new Audio(src);
+    const a=audioCache[src];
+    a.currentTime=0;
+    a.play().catch(()=>{});
+    if(a.readyState<2){a.onerror=next;a.load()}
+  }
+  next();
+}
+
+/* ---------- CAPTCHA ---------- */
+function showCaptcha(){
+  captchaActive=true;
+  const grid=$("captchaGrid"), msg=$("captchaMsg");
+  grid.innerHTML=""; msg.textContent="";
+  clickTimes=[];
+
+  const positions=new Set();
+  const amount=2+Math.floor(Math.random()*2);
+  while(positions.size<amount)positions.add(Math.floor(Math.random()*9));
+
+  const selected=new Set();
+  for(let i=0;i<9;i++){
+    const b=document.createElement("button");
+    b.className="captcha-tile";
+    if(positions.has(i)){
+      b.innerHTML='<img src="comar.png" alt="комар">';
+    }else{
+      const symbols=["🪰","🦋","🐝","🐞","🦗","🕷️"];
+      b.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+      b.style.fontSize="45px";
+    }
+    b.onclick=()=>{
+      if(selected.has(i)){selected.delete(i);b.classList.remove("selected")}
+      else{selected.add(i);b.classList.add("selected")}
+      if(selected.size===positions.size){
+        const ok=[...selected].every(i=>positions.has(i));
+        if(ok){
+          msg.textContent="✅ Проверка пройдена!";
+          setTimeout(()=>{
+            $("captchaOverlay").style.display="none";
+            captchaActive=false;
+          },500);
+        }else{
+          msg.textContent="❌ Ошибка!";
+          setTimeout(showCaptcha,650);
+        }
+      }
+    };
+    grid.appendChild(b);
+  }
+  $("captchaOverlay").style.display="flex";
+}
+
+/* ---------- CASES ---------- */
+function makeObjectURL(file){return URL.createObjectURL(file)}
+
+function loadFolder(files){
+  caseImages.forEach(x=>URL.revokeObjectURL(x.url));
+  caseImages=[...files]
+    .filter(f=>f.type.startsWith("image/"))
+    .map((f,i)=>({name:f.name,url:makeObjectURL(f),index:i}));
+  $("caseStatus").textContent=caseImages.length
+    ? `Подключено изображений: ${caseImages.length}. Каждая фотография может выпасть из кейса.`
+    : "В выбранной папке нет изображений.";
+  renderCases();
+}
+
+function renderCases(){
+  const grid=$("caseGrid");
+  grid.innerHTML=defaultCases.map(c=>{
+    const disabled=caseImages.length===0 || state.money<c.cost;
+    return `<div class="case">
+      <div class="preview">${caseImages[0]?`<img src="${caseImages[0].url}" alt="">`:"🎁"}</div>
+      <h3>${c.name}</h3>
+      <div class="case-desc">Содержимое: ${caseImages.length || "подключи фото"} изображений</div>
+      <button class="case-open" ${disabled?"disabled":""} data-case="${c.id}">
+        Открыть за 🦟 ${fmt(c.cost)}
+      </button>
+    </div>`;
+  }).join("");
+
+  grid.querySelectorAll("[data-case]").forEach(b=>{
+    b.onclick=()=>openCase(defaultCases.find(c=>c.id===b.dataset.case));
+  });
+}
+
+function openCase(c){
+  if(!caseImages.length || state.money<c.cost)return;
+  currentCase=c;
+  $("caseTitle").textContent="🎁 "+c.name;
+  $("caseCost").textContent="Стоимость: 🦟 "+fmt(c.cost);
+  $("result").textContent="";
+  $("spinBtn").disabled=false;
+  fillReel(false);
+  $("caseOverlay").style.display="flex";
+}
+
+function pickPrize(){
+  return caseImages[Math.floor(Math.random()*caseImages.length)];
+}
+
+function fillReel(spin=false, prize=null){
+  const reel=$("reel");
+  reel.innerHTML="";
+  const arr=[];
+  for(let i=0;i<9;i++)arr.push(spin&&i===5?prize:pickPrize());
+  arr.forEach(item=>{
+    const d=document.createElement("div");
+    d.className="reel-item";
+    d.innerHTML=`<img src="${item.url}" alt="">`;
+    reel.appendChild(d);
+  });
+}
+
+function spinCase(){
+  if(!currentCase || state.money<currentCase.cost || !caseImages.length)return;
+  const btn=$("spinBtn");
+  btn.disabled=true;
+  state.money-=currentCase.cost;
+  save();render();
+
+  const prize=pickPrize();
+  const reel=$("reel");
+  reel.innerHTML="";
+  const all=[];
+  for(let i=0;i<20;i++)all.push(i===18?prize:pickPrize());
+  all.forEach(item=>{
+    const d=document.createElement("div");
+    d.className="reel-item";
+    d.innerHTML=`<img src="${item.url}" alt="">`;
+    reel.appendChild(d);
+  });
+
+  reel.scrollLeft=0;
+  const max=reel.scrollWidth-reel.clientWidth;
+  let start=performance.now();
+  const duration=2800;
+  function anim(t){
+    const p=Math.min(1,(t-start)/duration);
+    const eased=1-Math.pow(1-p,4);
+    reel.scrollLeft=max*eased;
+    if(p<1)requestAnimationFrame(anim);
+    else{
+      $("result").innerHTML=`🏆 Выпало: <b>${escapeHtml(prize.name)}</b>`;
+      state.cases[prize.name]=(state.cases[prize.name]||0)+1;
+      save();render();checkAchievements();
+    }
+  }
+  requestAnimationFrame(anim);
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+/* ---------- tabs/events ---------- */
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.onclick=()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+    tab.classList.add("active");
+    $(tab.dataset.tab).classList.add("active");
+  };
+});
+
+$("mosquito").onclick=clickMosquito;
+$("buyPower").onclick=()=>buy("power");
+$("buyAuto").onclick=()=>buy("auto");
+$("folderInput").onchange=e=>loadFolder([...e.target.files]);
+$("spinBtn").onclick=spinCase;
+$("closeCase").onclick=()=>$("caseOverlay").style.display="none";
+
+render();checkAchievements();
+
+setInterval(()=>{
+  if(state.auto>0 && !captchaActive){
+    state.clicks+=state.auto;
+    state.money+=state.auto;
+    save();render();checkAchievements();
+  }
+},1000);
+</script>
+</body>
+</html>
